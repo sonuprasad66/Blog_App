@@ -8,6 +8,7 @@ const blogSchema = new mongoose.Schema(
     gif: { type: String },
     user_name: { type: String, require: true },
     user_id: { type: String, require: true },
+    user_profile_pic: { type: String, require: true },
   },
   {
     timestamps: true,

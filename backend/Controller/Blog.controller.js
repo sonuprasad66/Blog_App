@@ -13,6 +13,7 @@ const postBlog = async (req, res) => {
     gif: gif,
     user_name: user.name,
     user_id: user_id,
+    user_profile_pic: user.profile_pic,
   });
   await new_blog.save();
   res.send({ message: "Blog Created Successfully", status: "Success" });
