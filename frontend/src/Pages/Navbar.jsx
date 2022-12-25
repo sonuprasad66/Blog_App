@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   Flex,
@@ -18,7 +18,6 @@ import {
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Link as BrowseLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "../Redux/Auth/action";
 import * as types from "../Redux/Auth/actionTypes";
 import { PostBlog } from "./PostBlog";
 
@@ -31,14 +30,10 @@ export const Navbar = () => {
   const user = useSelector((state) => state.AuthReducer.currentUser);
 
   const handleLogout = () => {
-    navigate("/login");
     localStorage.removeItem("token");
+    navigate("/login");
     dispatch({ type: types.USER_LOGOUT_SUCCESS });
   };
-
-  useEffect(() => {
-    dispatch(getProfile());
-  }, [dispatch]);
 
   return (
     <>

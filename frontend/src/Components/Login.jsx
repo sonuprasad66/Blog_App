@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Box,
@@ -19,7 +19,7 @@ import {
 import { Link as BrowseLink, useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useDispatch } from "react-redux";
-import { getProfile, userLogin } from "../Redux/Auth/action";
+import { userLogin } from "../Redux/Auth/action";
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,10 +27,6 @@ export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const toast = useToast();
-
-  useEffect(() => {
-    dispatch(getProfile());
-  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
