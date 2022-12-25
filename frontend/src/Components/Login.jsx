@@ -1,45 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Flex,
   Box,
   FormControl,
   FormLabel,
-  Input,
-  InputGroup,
   InputRightElement,
+  InputGroup,
+  Input,
+  Checkbox,
   Stack,
+  Link,
   Button,
   Heading,
   Text,
   useColorModeValue,
-  Link,
   useToast,
 } from "@chakra-ui/react";
 import { Link as BrowseLink, useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useDispatch } from "react-redux";
-import { userSignup } from "../../Redux/Auth/action";
+import { getProfile, userLogin } from "../Redux/Auth/action";
 
-export const Signup = () => {
+export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [SignupData, setSignupData] = useState({});
-  const toast = useToast();
-
+  const [loginData, setLoginData] = useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const toast = useToast();
+
+  useEffect(() => {
+    dispatch(getProfile());
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSignupData({
-      ...SignupData,
+    setLoginData({
+      ...loginData,
       [name]: value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(userSignup(SignupData)).then((res) => {
-      if (res.payload.message === "Signup Successfull") {
+    dispatch(userLogin(loginData)).then((res) => {
+      if (res.payload.message === "Login successful") {
+        localStorage.setItem("token", res.payload.token);
         toast({
           title: res.payload.message,
           status: "success",
@@ -47,7 +52,7 @@ export const Signup = () => {
           isClosable: true,
           position: "top",
         });
-        navigate("/login");
+        navigate("/");
       } else {
         toast({
           title: res.payload.message,
@@ -70,11 +75,9 @@ export const Signup = () => {
       >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
-            <Heading fontSize={"4xl"} textAlign={"center"}>
-              Sign up
-            </Heading>
+            <Heading fontSize={"4xl"}>Sign in to your account</Heading>
             <Text fontSize={"lg"} color={"gray.600"}>
-              to enjoy all of our cool <Link color={"blue.400"}>features</Link>{" "}
+              to enjoy all of our cool <Link color={"blue.400"}>features</Link>
               ✌️
             </Text>
           </Stack>
@@ -86,39 +89,7 @@ export const Signup = () => {
           >
             <Stack spacing={4}>
               <form onSubmit={handleSubmit}>
-                <Flex
-                  flexDirection={{
-                    base: "column",
-                    sm: "column",
-                    lg: "row",
-                    xl: "row",
-                  }}
-                  gap={5}
-                >
-                  <Box>
-                    <FormControl id="fullname" isRequired>
-                      <FormLabel>Full Name</FormLabel>
-                      <Input
-                        type="text"
-                        name="name"
-                        placeholder="Enter Name"
-                        onChange={handleChange}
-                      />
-                    </FormControl>
-                  </Box>
-                  <Box>
-                    <FormControl id="profile_pic">
-                      <FormLabel>Profile_pic</FormLabel>
-                      <Input
-                        type="text"
-                        name="profile_pic"
-                        placeholder="Enter Profile URL"
-                        onChange={handleChange}
-                      />
-                    </FormControl>
-                  </Box>
-                </Flex>
-                <FormControl id="email" isRequired>
+                <FormControl id="email">
                   <FormLabel>Email address</FormLabel>
                   <Input
                     type="email"
@@ -127,7 +98,7 @@ export const Signup = () => {
                     onChange={handleChange}
                   />
                 </FormControl>
-                <FormControl id="password" isRequired>
+                <FormControl id="password">
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
                     <Input
@@ -148,12 +119,22 @@ export const Signup = () => {
                     </InputRightElement>
                   </InputGroup>
                 </FormControl>
-                <Stack spacing={10} pt={4}>
+                <Stack spacing={10}>
+                  <Stack
+                    direction={{ base: "column", sm: "row" }}
+                    align={"start"}
+                    justify={"space-between"}
+                  >
+                    <Checkbox>Remember me</Checkbox>
+                    <Link color={"blue.400"}>
+                      <BrowseLink to={"/forgetpassword"}>
+                        Forget Password?
+                      </BrowseLink>
+                    </Link>
+                  </Stack>
                   <Button
                     fontSize={{ base: "lg", md: "lg", lg: "xl", xl: "xl" }}
                     p={{ base: "1rem 1rem", lg: "1rem 2rem", xl: "1rem 2rem" }}
-                    loadingText="Submitting"
-                    size="lg"
                     bg={"blue.400"}
                     color={"white"}
                     _hover={{
@@ -161,16 +142,8 @@ export const Signup = () => {
                     }}
                     type="submit"
                   >
-                    Sign up
+                    Sign in
                   </Button>
-                </Stack>
-                <Stack pt={6}>
-                  <Text align={"center"}>
-                    Already a user?{" "}
-                    <Link color={"blue.400"}>
-                      <BrowseLink to={"/login"}>Login</BrowseLink>
-                    </Link>
-                  </Text>
                 </Stack>
               </form>
             </Stack>

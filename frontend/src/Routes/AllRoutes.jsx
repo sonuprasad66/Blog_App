@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, Routes } from "react-router";
-import { AllBlogs } from "../Components/AllBlogs/AllBlogs";
-import { ForgetPassword } from "../Components/ForgotPassword/ForgetPassword";
-import { Login } from "../Components/Login/Login";
-import { Signup } from "../Components/Signup/Signup";
+import { AllBlogs } from "../Components/AllBlogs";
+import { ForgetPassword } from "../Components/ForgetPassword";
+import { Login } from "../Components/Login";
+import { Signup } from "../Components/Signup";
 
 export const AllRoutes = () => {
   return (

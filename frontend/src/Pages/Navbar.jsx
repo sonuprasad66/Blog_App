@@ -18,8 +18,9 @@ import {
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Link as BrowseLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "../../Redux/Auth/action";
-import * as types from "../../Redux/Auth/actionTypes";
+import { getProfile } from "../Redux/Auth/action";
+import * as types from "../Redux/Auth/actionTypes";
+import { PostBlog } from "./PostBlog";
 
 export const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -51,6 +52,13 @@ export const Navbar = () => {
           <HStack spacing={8} alignItems={"center"} w="50%">
             <Input placeholder="Search Blog" bg={"light"} />
           </HStack>
+          {token ? (
+            <HStack alignItems={"center"}>
+              <PostBlog />
+            </HStack>
+          ) : (
+            ""
+          )}
           <Flex alignItems={"center"} gap={{ sm: "10px", lg: "30px" }}>
             <Menu>
               <MenuButton
@@ -62,9 +70,6 @@ export const Navbar = () => {
               >
                 <Avatar
                   size={"sm"}
-                  // src={
-                  //   "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                  // }
                   src={
                     !token
                       ? "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"

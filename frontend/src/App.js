@@ -1,4 +1,4 @@
-import { Navbar } from "./Pages/Navbar/Navbar";
+import { Navbar } from "./Pages/Navbar";
 import { AllRoutes } from "./Routes/AllRoutes";
 
 function App() {

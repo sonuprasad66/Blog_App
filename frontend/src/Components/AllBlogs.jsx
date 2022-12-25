@@ -1,6 +1,7 @@
+import { Box } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { getProfile } from "../../Redux/Auth/action";
+import { getProfile } from "../Redux/Auth/action";
 
 export const AllBlogs = () => {
   const dispatch = useDispatch();
@@ -8,5 +9,9 @@ export const AllBlogs = () => {
     dispatch(getProfile());
   }, [dispatch]);
 
-  return <div>AllBlogs</div>;
+  return (
+    <>
+      <Box>All Blogs</Box>
+    </>
+  );
 };

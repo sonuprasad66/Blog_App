@@ -1,50 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Box,
   FormControl,
   FormLabel,
-  InputRightElement,
-  InputGroup,
   Input,
-  Checkbox,
+  InputGroup,
+  InputRightElement,
   Stack,
-  Link,
   Button,
   Heading,
   Text,
   useColorModeValue,
+  Link,
   useToast,
 } from "@chakra-ui/react";
 import { Link as BrowseLink, useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useDispatch } from "react-redux";
-import { getProfile, userLogin } from "../../Redux/Auth/action";
+import { userSignup } from "../Redux/Auth/action";
 
-export const Login = () => {
+export const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [loginData, setLoginData] = useState({});
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [SignupData, setSignupData] = useState({});
   const toast = useToast();
 
-  useEffect(() => {
-    dispatch(getProfile());
-  }, [dispatch]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLoginData({
-      ...loginData,
+    setSignupData({
+      ...SignupData,
       [name]: value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(userLogin(loginData)).then((res) => {
-      if (res.payload.message === "Login successful") {
-        localStorage.setItem("token", res.payload.token);
+    dispatch(userSignup(SignupData)).then((res) => {
+      if (res.payload.message === "Signup Successfull") {
         toast({
           title: res.payload.message,
           status: "success",
@@ -52,7 +47,7 @@ export const Login = () => {
           isClosable: true,
           position: "top",
         });
-        navigate("/");
+        navigate("/login");
       } else {
         toast({
           title: res.payload.message,
@@ -75,9 +70,11 @@ export const Login = () => {
       >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
-            <Heading fontSize={"4xl"}>Sign in to your account</Heading>
+            <Heading fontSize={"4xl"} textAlign={"center"}>
+              Sign up
+            </Heading>
             <Text fontSize={"lg"} color={"gray.600"}>
-              to enjoy all of our cool <Link color={"blue.400"}>features</Link>
+              to enjoy all of our cool <Link color={"blue.400"}>features</Link>{" "}
               ✌️
             </Text>
           </Stack>
@@ -89,7 +86,39 @@ export const Login = () => {
           >
             <Stack spacing={4}>
               <form onSubmit={handleSubmit}>
-                <FormControl id="email">
+                <Flex
+                  flexDirection={{
+                    base: "column",
+                    sm: "column",
+                    lg: "row",
+                    xl: "row",
+                  }}
+                  gap={5}
+                >
+                  <Box>
+                    <FormControl id="fullname" isRequired>
+                      <FormLabel>Full Name</FormLabel>
+                      <Input
+                        type="text"
+                        name="name"
+                        placeholder="Enter Name"
+                        onChange={handleChange}
+                      />
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl id="profile_pic">
+                      <FormLabel>Profile_pic</FormLabel>
+                      <Input
+                        type="text"
+                        name="profile_pic"
+                        placeholder="Enter Profile URL"
+                        onChange={handleChange}
+                      />
+                    </FormControl>
+                  </Box>
+                </Flex>
+                <FormControl id="email" isRequired>
                   <FormLabel>Email address</FormLabel>
                   <Input
                     type="email"
@@ -98,7 +127,7 @@ export const Login = () => {
                     onChange={handleChange}
                   />
                 </FormControl>
-                <FormControl id="password">
+                <FormControl id="password" isRequired>
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
                     <Input
@@ -119,22 +148,12 @@ export const Login = () => {
                     </InputRightElement>
                   </InputGroup>
                 </FormControl>
-                <Stack spacing={10}>
-                  <Stack
-                    direction={{ base: "column", sm: "row" }}
-                    align={"start"}
-                    justify={"space-between"}
-                  >
-                    <Checkbox>Remember me</Checkbox>
-                    <Link color={"blue.400"}>
-                      <BrowseLink to={"/forgetpassword"}>
-                        Forget Password?
-                      </BrowseLink>
-                    </Link>
-                  </Stack>
+                <Stack spacing={10} pt={4}>
                   <Button
                     fontSize={{ base: "lg", md: "lg", lg: "xl", xl: "xl" }}
                     p={{ base: "1rem 1rem", lg: "1rem 2rem", xl: "1rem 2rem" }}
+                    loadingText="Submitting"
+                    size="lg"
                     bg={"blue.400"}
                     color={"white"}
                     _hover={{
@@ -142,8 +161,16 @@ export const Login = () => {
                     }}
                     type="submit"
                   >
-                    Sign in
+                    Sign up
                   </Button>
+                </Stack>
+                <Stack pt={6}>
+                  <Text align={"center"}>
+                    Already a user?{" "}
+                    <Link color={"blue.400"}>
+                      <BrowseLink to={"/login"}>Login</BrowseLink>
+                    </Link>
+                  </Text>
                 </Stack>
               </form>
             </Stack>
