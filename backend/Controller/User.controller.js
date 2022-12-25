@@ -38,21 +38,27 @@ const userSignup = async (req, res) => {
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
   const user = await userModel.findOne({ email });
-  const hashed_password = user.password;
-  const user_id = user._id;
-
-  bcrypt.compare(password, hashed_password, async (err, result) => {
-    if (err) {
-      res.send({ message: "Something went wrong", status: "Error" });
-    } else {
-      if (result) {
-        let token = jwt.sign({ user_id }, process.env.SECRET_KEY);
-        res.send({ message: "Login successful", token: token });
+  if (user) {
+    const hashed_password = user.password;
+    const user_id = user._id;
+    bcrypt.compare(password, hashed_password, async (err, result) => {
+      if (err) {
+        res.send({ message: "Something went wrong", status: "Error" });
       } else {
-        res.send({ message: "Login failed", status: "Failed" });
+        if (result) {
+          let token = jwt.sign({ user_id }, process.env.SECRET_KEY);
+          res.send({ message: "Login successful", token: token });
+        } else {
+          res.send({ message: "Login failed", status: "Failed" });
+        }
       }
-    }
-  });
+    });
+  } else {
+    res.send({
+      message: "User Not Found, Please Try To Signup",
+      status: "Failed",
+    });
+  }
 };
 
 const userProfile = async (req, res) => {

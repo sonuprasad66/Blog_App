@@ -5,13 +5,15 @@ const cors = require("cors");
 app.use(cors());
 require("dotenv").config();
 const { connection } = require("./Config/db");
-const { userRouter } = require("./Routes/User.Route");
+const { userRouter } = require("./Routes/User.route");
+const { blogRouter } = require("./Routes/Blog.route");
 
 app.get("/", (req, res) => {
   res.send("Welcome to MainRoutes");
 });
 
 app.use("/", userRouter);
+app.use("/", blogRouter);
 
 app.listen(process.env.PORT, async () => {
   try {
