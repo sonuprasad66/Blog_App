@@ -13,12 +13,53 @@ import {
   Text,
   useColorModeValue,
   Link,
+  useToast,
 } from "@chakra-ui/react";
-import { Link as BrowseLink } from "react-router-dom";
+import { Link as BrowseLink, useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { useDispatch } from "react-redux";
+import { userSignup } from "../../Redux/Auth/action";
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [SignupData, setSignupData] = useState({});
+  const toast = useToast();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSignupData({
+      ...SignupData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(userSignup(SignupData)).then((res) => {
+      if (res.payload.message === "Signup Successfull") {
+        toast({
+          title: res.payload.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "top",
+        });
+        navigate("/login");
+      } else {
+        toast({
+          title: res.payload.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    });
+  };
+
   return (
     <>
       <Flex
@@ -44,7 +85,7 @@ export const Signup = () => {
             p={8}
           >
             <Stack spacing={4}>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <Flex
                   flexDirection={{
                     base: "column",
@@ -57,19 +98,34 @@ export const Signup = () => {
                   <Box>
                     <FormControl id="fullname" isRequired>
                       <FormLabel>Full Name</FormLabel>
-                      <Input type="text" name="name" />
+                      <Input
+                        type="text"
+                        name="name"
+                        placeholder="Enter Name"
+                        onChange={handleChange}
+                      />
                     </FormControl>
                   </Box>
                   <Box>
                     <FormControl id="profile_pic">
                       <FormLabel>Profile_pic</FormLabel>
-                      <Input type="file" name="profile_pic" />
+                      <Input
+                        type="text"
+                        name="profile_pic"
+                        placeholder="Enter Profile URL"
+                        onChange={handleChange}
+                      />
                     </FormControl>
                   </Box>
                 </Flex>
                 <FormControl id="email" isRequired>
                   <FormLabel>Email address</FormLabel>
-                  <Input type="email" name="email" />
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Enter Email"
+                    onChange={handleChange}
+                  />
                 </FormControl>
                 <FormControl id="password" isRequired>
                   <FormLabel>Password</FormLabel>
@@ -77,6 +133,8 @@ export const Signup = () => {
                     <Input
                       type={showPassword ? "text" : "password"}
                       name="password"
+                      placeholder="Enter Password"
+                      onChange={handleChange}
                     />
                     <InputRightElement h={"full"}>
                       <Button

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Flex,
   Box,
@@ -14,12 +14,57 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
-import { Link as BrowseLink } from "react-router-dom";
+import { Link as BrowseLink, useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { useDispatch } from "react-redux";
+import { getProfile, userLogin } from "../../Redux/Auth/action";
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loginData, setLoginData] = useState({});
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  useEffect(() => {
+    dispatch(getProfile());
+  }, [dispatch]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setLoginData({
+      ...loginData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(userLogin(loginData)).then((res) => {
+      if (res.payload.message === "Login successful") {
+        localStorage.setItem("token", res.payload.token);
+        toast({
+          title: res.payload.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "top",
+        });
+        navigate("/");
+      } else {
+        toast({
+          title: res.payload.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    });
+  };
+
   return (
     <>
       <Flex
@@ -43,10 +88,15 @@ export const Login = () => {
             p={8}
           >
             <Stack spacing={4}>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <FormControl id="email">
                   <FormLabel>Email address</FormLabel>
-                  <Input type="email" name="email" />
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Enter Email"
+                    onChange={handleChange}
+                  />
                 </FormControl>
                 <FormControl id="password">
                   <FormLabel>Password</FormLabel>
@@ -54,6 +104,8 @@ export const Login = () => {
                     <Input
                       type={showPassword ? "text" : "password"}
                       name="password"
+                      placeholder="Enter Password"
+                      onChange={handleChange}
                     />
                     <InputRightElement h={"full"}>
                       <Button
