@@ -29,11 +29,21 @@ export const reducer = (state = initialState, action) => {
         blog: [],
       };
 
+    case types.POST_BLOG_REQUEST:
+      return { ...state, isLoading: true, isError: false };
+
     case types.POST_BLOG_SUCCESS:
       return {
         ...state,
         isLoading: false,
         isError: false,
+      };
+
+    case types.POST_BLOG_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
       };
 
     default:

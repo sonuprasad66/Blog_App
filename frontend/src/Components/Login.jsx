@@ -15,10 +15,11 @@ import {
   Text,
   useColorModeValue,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { Link as BrowseLink, useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../Redux/Auth/action";
 
 export const Login = () => {
@@ -27,7 +28,7 @@ export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const toast = useToast();
-
+  const isLoading = useSelector((state) => state.AuthReducer.isLoading);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginData({
@@ -138,7 +139,17 @@ export const Login = () => {
                     }}
                     type="submit"
                   >
-                    Sign in
+                    {isLoading ? (
+                      <Spinner
+                        thickness="4px"
+                        speed="0.65s"
+                        emptyColor="gray.200"
+                        color="blue.500"
+                        size="md"
+                      />
+                    ) : (
+                      "LOG IN"
+                    )}
                   </Button>
                 </Stack>
               </form>

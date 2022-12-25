@@ -15,15 +15,19 @@ import {
   Input,
   Flex,
   Spinner,
+  MenuItem,
+  useToast,
 } from "@chakra-ui/react";
 import { MdPermMedia } from "react-icons/md";
 import { AiOutlineFileGif } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { getBlog, postBlog } from "../Redux/Blog/action";
-export const PostBlog = () => {
+import { editBlog, getBlog, postBlog } from "../Redux/Blog/action";
+
+export const EditBlog = ({ id }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [blogData, setBlogData] = useState({});
   const dispatch = useDispatch();
+  const toast = useToast();
 
   const isLoading = useSelector((state) => state.BlogReducer.isLoading);
 
@@ -37,8 +41,14 @@ export const PostBlog = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(postBlog(blogData)).then((res) => {
-      console.log(res);
+    dispatch(editBlog({ id: id, data: blogData })).then((res) => {
+      toast({
+        title: res.payload.message,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "top",
+      });
       dispatch(getBlog());
       onClose();
     });
@@ -46,18 +56,16 @@ export const PostBlog = () => {
 
   return (
     <>
-      <Button onClick={onOpen} colorScheme={"blue"}>
-        CREATE BLOG
-      </Button>
+      <MenuItem onClick={onOpen}>Edit</MenuItem>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textAlign={"center"}>CREATE NEW BLOG</ModalHeader>
+          <ModalHeader textAlign={"center"}>UPDATE BLOG BLOG</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Box w={"100%"} p={5} m={"auto"} boxShadow={"xs"} mb={"20px"}>
               <form onSubmit={handleSubmit}>
-                <FormControl isRequired>
+                <FormControl>
                   <FormLabel>Blog Title</FormLabel>
                   <Input
                     type="text"
@@ -99,7 +107,7 @@ export const PostBlog = () => {
                         size="md"
                       />
                     ) : (
-                      "POST"
+                      "UPDATE"
                     )}
                   </Button>
                 </Flex>
